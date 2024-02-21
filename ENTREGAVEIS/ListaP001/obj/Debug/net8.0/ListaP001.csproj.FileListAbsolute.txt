@@ -1,0 +1,15 @@
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\bin\Debug\net8.0\ListaP001.exe
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\bin\Debug\net8.0\ListaP001.deps.json
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\bin\Debug\net8.0\ListaP001.runtimeconfig.json
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\bin\Debug\net8.0\ListaP001.dll
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\bin\Debug\net8.0\ListaP001.pdb
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\obj\Debug\net8.0\ListaP001.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\obj\Debug\net8.0\ListaP001.AssemblyInfoInputs.cache
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\obj\Debug\net8.0\ListaP001.AssemblyInfo.cs
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\obj\Debug\net8.0\ListaP001.csproj.CoreCompileInputs.cache
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\obj\Debug\net8.0\ListaP001.sourcelink.json
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\obj\Debug\net8.0\ListaP001.dll
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\obj\Debug\net8.0\refint\ListaP001.dll
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\obj\Debug\net8.0\ListaP001.pdb
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\obj\Debug\net8.0\ListaP001.genruntimeconfig.cache
+C:\Users\Paula\OneDrive\Área de Trabalho\CDB\ListaP001\obj\Debug\net8.0\ref\ListaP001.dll
