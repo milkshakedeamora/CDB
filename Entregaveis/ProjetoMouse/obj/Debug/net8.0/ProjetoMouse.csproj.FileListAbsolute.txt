@@ -1,0 +1,14 @@
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\bin\Debug\net8.0\ProjetoMouse.exe
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\bin\Debug\net8.0\ProjetoMouse.deps.json
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\bin\Debug\net8.0\ProjetoMouse.runtimeconfig.json
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\bin\Debug\net8.0\ProjetoMouse.dll
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\bin\Debug\net8.0\ProjetoMouse.pdb
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\obj\Debug\net8.0\ProjetoMouse.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\obj\Debug\net8.0\ProjetoMouse.AssemblyInfoInputs.cache
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\obj\Debug\net8.0\ProjetoMouse.AssemblyInfo.cs
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\obj\Debug\net8.0\ProjetoMouse.csproj.CoreCompileInputs.cache
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\obj\Debug\net8.0\ProjetoMouse.dll
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\obj\Debug\net8.0\refint\ProjetoMouse.dll
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\obj\Debug\net8.0\ProjetoMouse.pdb
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\obj\Debug\net8.0\ProjetoMouse.genruntimeconfig.cache
+C:\Users\Paula\OneDrive\Área de Trabalho\CBD-POO2\ProjetoMouse\obj\Debug\net8.0\ref\ProjetoMouse.dll
