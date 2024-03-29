@@ -1,0 +1,14 @@
+C:\Users\Paula\Desktop\Projeto-banco\obj\Debug\net8.0\Projeto-banco.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Paula\Desktop\Projeto-banco\obj\Debug\net8.0\Projeto-banco.AssemblyInfoInputs.cache
+C:\Users\Paula\Desktop\Projeto-banco\obj\Debug\net8.0\Projeto-banco.AssemblyInfo.cs
+C:\Users\Paula\Desktop\Projeto-banco\obj\Debug\net8.0\Projeto-banco.csproj.CoreCompileInputs.cache
+C:\Users\Paula\Desktop\Projeto-banco\bin\Debug\net8.0\Projeto-banco.exe
+C:\Users\Paula\Desktop\Projeto-banco\bin\Debug\net8.0\Projeto-banco.deps.json
+C:\Users\Paula\Desktop\Projeto-banco\bin\Debug\net8.0\Projeto-banco.runtimeconfig.json
+C:\Users\Paula\Desktop\Projeto-banco\bin\Debug\net8.0\Projeto-banco.dll
+C:\Users\Paula\Desktop\Projeto-banco\bin\Debug\net8.0\Projeto-banco.pdb
+C:\Users\Paula\Desktop\Projeto-banco\obj\Debug\net8.0\Projeto-banco.dll
+C:\Users\Paula\Desktop\Projeto-banco\obj\Debug\net8.0\refint\Projeto-banco.dll
+C:\Users\Paula\Desktop\Projeto-banco\obj\Debug\net8.0\Projeto-banco.pdb
+C:\Users\Paula\Desktop\Projeto-banco\obj\Debug\net8.0\Projeto-banco.genruntimeconfig.cache
+C:\Users\Paula\Desktop\Projeto-banco\obj\Debug\net8.0\ref\Projeto-banco.dll
