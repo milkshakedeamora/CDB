@@ -3,7 +3,6 @@ using System.Data;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-
 public class DatabaseConnection
 {
     
@@ -20,15 +19,23 @@ public class DatabaseConnection
         connection.Close();
     }
     //ATUALIZANDO ... 
-    public static void changeSaldo(int id, double valor)
+    public static void AlterarSaldo(int id, double valor)
     {
         using (SqlConnection connection = GetConnection())
         {
-            string sql = $"UPDATE tb_conta SET saldo = {setSaldo(id)+valor} WHERE contaId = id";
-            SqlCommand command = new SqlCommand(sql, connection);            
-            command.ExecuteNonQuery();
+            
+          
+            string sql = "UPDATE tb_conta SET saldo = @novoSaldo WHERE contaId = @id";
+
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@novoSaldo", Convert.ToDecimal(valor)+getSaldo(id));
+                command.Parameters.AddWithValue("@id", id);                
+                command.ExecuteNonQuery();
+            }
         }
     }
+
 
 
     // RETORNANDO ... 
@@ -36,7 +43,7 @@ public class DatabaseConnection
     {
         SqlConnection connection = GetConnection();
         string tipo = null;
-        string stringSql = $"SELECT * FROM tb_conta INNER JOIN tb_TipoConta ON tb_conta.contaId = tb_TipoConta.tipoContaId WHERE contaId = {id}";
+        string stringSql = $"SELECT * FROM tb_conta INNER JOIN tb_TipoConta ON tb_conta.tipo = tb_TipoConta.tipoContaId WHERE contaId = {id}";
         SqlCommand command = new SqlCommand(stringSql, connection);
         SqlDataReader reader = command.ExecuteReader();
         if (reader.Read())
@@ -51,8 +58,8 @@ public class DatabaseConnection
     public static string getTipoCliente(int id)
     {
         SqlConnection connection = GetConnection();
-        string tipo = "N";
-        string stringSql = $"SELECT * FROM tb_cliente INNER JOIN tb_TipoCliente ON tb_cliente.clienteId = tb_TipoCliente.tipoClienteId WHERE clienteId = {id}";
+        string tipo = null;
+        string stringSql = $"SELECT * FROM tb_cliente INNER JOIN tb_TipoCliente ON tb_cliente.tipo = tb_TipoCliente.tipoClienteId WHERE clienteId = {id}";
         SqlCommand command = new SqlCommand(stringSql, connection);
         SqlDataReader reader = command.ExecuteReader();
         if (reader.Read())
@@ -88,24 +95,26 @@ public class DatabaseConnection
         }
 
         connection.Close();
-        return $"{nome}, Cliente {getTipoCliente(idCliente)}  - Conta {getTipoConta(idConta)}  :{numero} Saldo: R$ {saldo}";
+        return $"{nome}, Cliente {getTipoCliente(idCliente)}  - Conta {getTipoConta(idConta)}:{numero} - Saldo: R$ {saldo}";
 
     }
-        public static double setSaldo(int id)
+    public static decimal getSaldo(int id)
     {
         SqlConnection connection = GetConnection();
-        double saldo = 0;
-        string stringSql = $"SELECT tb_conta WHERE tb_conta.contaId = {id}";
+        decimal saldo = 0;
+        string stringSql = $"SELECT saldo FROM tb_conta WHERE contaId = {id}";
         SqlCommand command = new SqlCommand(stringSql, connection);
         SqlDataReader reader = command.ExecuteReader();
         if (reader.Read())
         {
-            saldo = reader.GetDouble("contaId");
+            saldo = reader.GetDecimal(0);
         }
 
         connection.Close();
         return saldo;
     }
+
+
     public static string setSenha(int id)
     {
         SqlConnection connection = GetConnection();

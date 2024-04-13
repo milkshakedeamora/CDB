@@ -199,15 +199,16 @@ namespace Projeto_Banco_Part2
             {
                 if (valor>0)
                 {
-                    DatabaseConnection.changeSaldo(id, valor);
+                    DatabaseConnection.AlterarSaldo(id, valor);
                     return true;
                 }
                 throw new ArgumentException("Valor Invalido.");
             }
             bool sacar(double valor, int id)
             {
-                if (valor<=DatabaseConnection.setSaldo(id)) {
-                    DatabaseConnection.changeSaldo(id, (valor * -1)); return true;
+                
+                if (valor<= 0) {
+                    DatabaseConnection.AlterarSaldo(id, (valor * -1)); return true;
                 }
                 throw new ArgumentException("Saldo Insuficiente");
             }
