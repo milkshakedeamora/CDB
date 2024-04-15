@@ -7,10 +7,11 @@ namespace Projeto_Banco_Part2
 {
     internal class Program
     {
+        
         static void Main(string[] args)
         {
-            var dbConnection = new DatabaseConnection();
-            int numeroConta = 4000;
+
+            int numeroConta = 6000;
             int opcao;
 
             do
@@ -21,7 +22,10 @@ namespace Projeto_Banco_Part2
                 Console.WriteLine("2. Transferir Dinheiro");
                 Console.WriteLine("3. Depositar Dinheiro");
                 Console.WriteLine("4. Consultar Saldo");
-                Console.WriteLine("5. Sair");
+                Console.WriteLine("5. Sacar Dinheiro");
+                Console.WriteLine("6. Alterar Dados Cliente");
+                Console.WriteLine("7. Excluir Conta");
+                Console.WriteLine("8. Sair");
                 Console.WriteLine();
 
                 Console.Write("Digite a opção desejada: ");
@@ -36,16 +40,8 @@ namespace Projeto_Banco_Part2
                         break;
                     case 2:
                         try
-                        {
-                            int a = login();
-                            if (a!=-1)
-                            {
-                                Console.WriteLine("Valor para transferencia:");
-                                int valor = int.Parse(Console.ReadLine());
-                                Transferir(valor,a);
-                                
-
-                            }
+                        {                           
+                                Transferir(login());                            
                             
                         }
                         catch (Exception ex)
@@ -56,15 +52,7 @@ namespace Projeto_Banco_Part2
                     case 3:
                         try
                         {
-                            int a = login();
-                            if (a != -1)
-                            {
-                                Console.WriteLine("Valor para deposito:");
-                                int valor = int.Parse(Console.ReadLine());
-                                depositar(valor,a);
-
-
-                            }
+                           depositar(login() );
                         }
                         catch (Exception ex)
                         {
@@ -82,13 +70,53 @@ namespace Projeto_Banco_Part2
                         }
                         break;
                     case 5:
+                        try
+                        {
+                            sacar(login());
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.Error.WriteLine($"Erro: {ex.Message}");
+                        }
+                        break;
+                    case 6:
+                        try
+                        {
+                            AlterarDados(login());
+                        }
+                        catch(Exception ex)
+                        {
+                            Console.Error.WriteLine($"Erro: {ex.Message}");
+                        }
+                        break;
+                    case 7:
+                        try
+                        {
+                            Console.WriteLine("Certeza? Digite 1:");
+                            opcao = int.Parse(Console.ReadLine());
+                            if (opcao == 1)
+                            {
+                                Console.WriteLine("Desculpe por não atender seus padrões. Digite seus dados pela ultima vez:");
+                                DatabaseConnection.ExcluirContaCliente(login());
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.Error.WriteLine($"Erro: {ex.Message}");
+                        }
+                        
+                        
+                        break;
+                    case 8:
                         Console.WriteLine("Obrigado por utilizar nossos serviços.");
                         break;
                     default:
                         Console.WriteLine("Opção inválida!");
                         break;
                 }
-            } while (opcao != 5);
+                atualizarTipo();
+            } while (opcao != 8);
 
             void Cadastrar()
             {
@@ -118,22 +146,21 @@ namespace Projeto_Banco_Part2
                 Console.Write("Digite a senha a ser usada: ");
                 string senha = Console.ReadLine();
                 string numero = gerarNumero();
-                dbConnection.CriarConta(numero, (tipoConta-1));
+                DatabaseConnection.CriarConta(numero, (tipoConta-1));
                 if (tipoConta == 1)
                 {
                     
-                    dbConnection.CriarContaCorrente(numero);
+                    DatabaseConnection.CriarContaCorrente(numero);
                     
                 }
                 else
                 {
                     
-                    dbConnection.CriarContaPoupanca(numero);
+                   DatabaseConnection.CriarContaPoupanca(numero);
                     
                 }
-                int idConta = DatabaseConnection.setIdConta(numero);
-                Console.WriteLine(idConta);
-                dbConnection.CriarCliente(nome, cpf, senha, data, idConta);
+                int idConta = DatabaseConnection.setIdConta(numero);                
+                DatabaseConnection.CriarCliente(nome, cpf, senha, data, idConta);
 
             }
             DateTime receberAniversario()
@@ -182,8 +209,18 @@ namespace Projeto_Banco_Part2
                 return true;
             }
             
-            void Transferir(double valor,int idRementente)
+            void Transferir(int idRementente)
             {
+                Console.Write("Digite o valor para transferencia: ");
+                double valor = double.Parse(Console.ReadLine());
+                if (Convert.ToDecimal(valor) > DatabaseConnection.getSaldo(idRementente))
+                {
+                    throw new ArgumentException("Saldo Insuficiente");
+                }
+                if (valor < 0)
+                {
+                    throw new ArgumentException("Valor invalido.");
+                }
                 Console.Write("Digite o numero da Conta: ");
                 string conta = Console.ReadLine();
                 int idDestinatario = DatabaseConnection.setIdConta(conta);
@@ -192,11 +229,13 @@ namespace Projeto_Banco_Part2
                     throw new ArgumentException("Conta Não Encontrada.");
 
                 }
-                depositar(valor, idDestinatario);
-                sacar(valor, idRementente);
+                DatabaseConnection.AlterarSaldo(idRementente, valor*-1);
+                DatabaseConnection.AlterarSaldo(idDestinatario, valor);
             }
-            bool depositar(double valor, int id)
+            bool depositar(int id)
             {
+                Console.Write("Digite o valor para deposito: ");
+                double valor = double.Parse(Console.ReadLine());
                 if (valor>0)
                 {
                     DatabaseConnection.AlterarSaldo(id, valor);
@@ -204,10 +243,11 @@ namespace Projeto_Banco_Part2
                 }
                 throw new ArgumentException("Valor Invalido.");
             }
-            bool sacar(double valor, int id)
+            bool sacar(int id)
             {
-                
-                if (valor<= 0) {
+                Console.Write("Digite o valor para saque: ");
+                double valor = double.Parse(Console.ReadLine());
+                if (Convert.ToDecimal(valor)<= DatabaseConnection.getSaldo(id)) {
                     DatabaseConnection.AlterarSaldo(id, (valor * -1)); return true;
                 }
                 throw new ArgumentException("Saldo Insuficiente");
@@ -225,13 +265,56 @@ namespace Projeto_Banco_Part2
                     throw new ArgumentException("Conta Invalida.");
 
                 }
+                
+                if (DatabaseConnection.setSenha(id) != senha)
+                    {
+                        throw new ArgumentException("Senha Errada.");
+                    }
                 return id;
+
+                
+                
             }
 
             void atualizarTipo()
             {
-               
+                DatabaseConnection.AtualizarTipoCliente();
             }
+
+            void AlterarDados(int id)
+            {
+                Console.WriteLine("Menu de Opções");
+                Console.WriteLine("--------------------------");
+                Console.WriteLine("1. Nome");
+                Console.WriteLine("2. Senha");
+                Console.WriteLine("3. Conta Poupança/Corrente");                
+                Console.WriteLine();
+                Console.Write("Digite a opção desejada: ");
+                int escolha = int.Parse(Console.ReadLine());
+
+                Console.WriteLine();
+
+                switch (escolha)
+                {
+                    case 1:
+                        Console.Write("Digite o novo nome:");
+                        string n = Console.ReadLine();                        
+                        DatabaseConnection.AlterarDado(id, "nome", n);
+                        break;
+                    case 2:
+                        Console.Write("Digite a nova senha: ");
+                        string senha = Console.ReadLine();
+                        DatabaseConnection.AlterarDado(id, "senha", senha);
+                        break;
+                    case 3:
+                        DatabaseConnection.mudarTipoConta(id);
+                        break;
+                    default:
+                        Console.WriteLine("Opção incorreta.");
+                        break;
+                }
+            }
+
 
         }
     }

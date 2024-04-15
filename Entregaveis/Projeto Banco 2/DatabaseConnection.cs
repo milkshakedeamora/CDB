@@ -18,7 +18,86 @@ public class DatabaseConnection
     {
         connection.Close();
     }
+
+    //EXCLUINDO .... 
+    public static void ExcluirContaCorrentePoupanca(int id)
+    {
+        using (SqlConnection connection = GetConnection())
+        {
+            // Excluir conta corrente
+            string stringSql = $"DELETE FROM tb_contaCorrente WHERE numero IN (SELECT numero FROM tb_conta WHERE contaId = {id})";
+            SqlCommand command = new SqlCommand(stringSql, connection);
+            command.ExecuteNonQuery();
+
+            // Excluir conta poupança
+            stringSql = $"DELETE FROM tb_contaPoupanca WHERE numero IN (SELECT numero FROM tb_conta WHERE contaId = {id})";
+            command = new SqlCommand(stringSql, connection);
+            command.ExecuteNonQuery();
+        }
+    }
+    public static void ExcluirContaCliente(int id)
+    {
+        using (SqlConnection connection = GetConnection())
+        {
+            
+
+            // Excluir cliente
+            string stringSql = $"DELETE FROM tb_cliente WHERE conta = {id}";
+            SqlCommand command = new SqlCommand(stringSql, connection);
+            command.ExecuteNonQuery();
+            ExcluirContaCorrentePoupanca(id);
+
+            // Excluir conta
+            stringSql = $"DELETE FROM tb_conta WHERE contaId = {id}";
+            command = new SqlCommand(stringSql, connection);
+            command.ExecuteNonQuery();
+
+            connection.Close();
+        }
+    }
+
+
     //ATUALIZANDO ... 
+    public static void mudarTipoConta(int id)
+    {
+        string tipo;
+        SqlConnection connection = GetConnection();
+        if (getTipoConta(id) == "corrente")
+        {
+            ExcluirContaCorrentePoupanca(id);
+            CriarContaPoupanca(getNumero(id));            
+            string stringSql = "UPDATE tb_conta SET tipo = 1";
+            SqlCommand command = new SqlCommand(stringSql, connection);
+            command.ExecuteNonQuery();
+
+        }
+        else
+        {
+            ExcluirContaCorrentePoupanca(id);
+            CriarContaCorrente(getNumero(id));
+            string stringSql = "UPDATE tb_conta SET tipo = 0";
+            SqlCommand command = new SqlCommand(stringSql, connection);
+            command.ExecuteNonQuery();
+
+        }
+        CloseConnection(connection);
+    }
+
+    public static void AlterarDado(int id, string dado, string novoValor)
+    {
+        using (SqlConnection connection = GetConnection())
+        {
+            string sql = $"UPDATE tb_cliente SET {dado} = @novoValor WHERE conta IN (SELECT contaId FROM tb_conta WHERE contaId = @id)";
+
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@novoValor", novoValor);
+                command.Parameters.AddWithValue("@id", id);
+                command.ExecuteNonQuery();
+            }
+        }
+    }
+
     public static void AlterarSaldo(int id, double valor)
     {
         using (SqlConnection connection = GetConnection())
@@ -35,6 +114,23 @@ public class DatabaseConnection
             }
         }
     }
+
+    public static void AtualizarTipoCliente()
+    {
+            SqlConnection connection = GetConnection();
+            string stringSql = "UPDATE tb_cliente SET tipo = 0";
+            SqlCommand command = new SqlCommand(stringSql, connection);
+            command.ExecuteNonQuery();
+            stringSql = @"UPDATE tb_cliente SET tipo = 1 WHERE conta IN (SELECT contaId FROM tb_conta WHERE saldo >= 5000 AND saldo < 15000)";
+            command = new SqlCommand(stringSql, connection);
+            command.ExecuteNonQuery();
+            stringSql = @"UPDATE tb_cliente SET tipo = 2 WHERE conta IN (SELECT contaId FROM tb_conta WHERE saldo >= 15000)";
+            command = new SqlCommand(stringSql, connection);
+            command.ExecuteNonQuery();
+            CloseConnection(connection);
+        
+    }
+
 
 
 
@@ -76,10 +172,11 @@ public class DatabaseConnection
     {
         SqlConnection connection = GetConnection();
         string nome = null;
-         string numero = null;
+        string numero = null;
         decimal saldo = 0;
         int idCliente = -1;
         int idConta = -1;
+        DateTime data = DateTime.MinValue;
         string stringSql = $"SELECT * FROM tb_cliente INNER JOIN tb_conta ON tb_cliente.conta = tb_conta.contaId WHERE tb_conta.contaId = {id}";
         SqlCommand command = new SqlCommand(stringSql, connection);
         SqlDataReader reader = command.ExecuteReader();
@@ -90,12 +187,14 @@ public class DatabaseConnection
             saldo = reader.GetDecimal("saldo");
             idCliente = reader.GetInt32("clienteId");
             idConta = reader.GetInt32("contaId");
+            data = reader.GetDateTime("dataNascimento");
+
 
 
         }
 
         connection.Close();
-        return $"{nome}, Cliente {getTipoCliente(idCliente)}  - Conta {getTipoConta(idConta)}:{numero} - Saldo: R$ {saldo}";
+        return $"{nome} ({data}), Cliente {getTipoCliente(idCliente)}  - Conta {getTipoConta(idConta)}:{numero} - Saldo: R$ {saldo}";
 
     }
     public static decimal getSaldo(int id)
@@ -178,9 +277,24 @@ public class DatabaseConnection
         return cliente;
     }
 
+    public static string getNumero(int id)
+    {
+        SqlConnection connection = GetConnection();
+        string numero = null;
+        string stringSql = $"SELECT numero FROM tb_conta WHERE tb_conta.contaId = {id}";
+        SqlCommand command = new SqlCommand(stringSql, connection);
+        SqlDataReader reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            numero = reader.GetString(0);
+        }
+
+        CloseConnection(connection);
+        return numero;
+    }
 
     // CRIANDO ... 
-    public void CriarConta(string numero, int tipo)
+    public static void CriarConta(string numero, int tipo)
     {
         using (SqlConnection connection = GetConnection())
         {
@@ -194,16 +308,16 @@ public class DatabaseConnection
         
     }
 
-    public void CriarCliente(string nome, string cpf, string senha, DateTime dataDeNascimento, int conta)
+    public static void CriarCliente(string nome, string cpf, string senha, DateTime dataDeNascimento, int conta)
     {
         using (SqlConnection connection = GetConnection())
         {
-            string sql = "INSERT INTO tb_cliente (nome, cpf, senha, tipo, conta) VALUES (@nome, @cpf, @senha,@tipo,@conta)";
+            string sql = "INSERT INTO tb_cliente (nome, cpf, senha, dataNascimento, tipo, conta) VALUES (@nome, @cpf, @senha,@dataDeNascimento, @tipo,@conta)";
             SqlCommand command = new SqlCommand(sql, connection);
             command.Parameters.AddWithValue("@nome", nome);
             command.Parameters.AddWithValue("@cpf", cpf);
             command.Parameters.AddWithValue("@senha",senha);
-            //command.Parameters.AddWithValue("@dataDeNascimento", dataDeNascimento);
+            command.Parameters.AddWithValue("@dataDeNascimento", dataDeNascimento);
             command.Parameters.AddWithValue("@tipo",0);
             command.Parameters.AddWithValue("@conta", conta);
             command.ExecuteNonQuery();
@@ -211,7 +325,7 @@ public class DatabaseConnection
 
     }
 
-    public void CriarContaCorrente(string numero)
+    public static void CriarContaCorrente(string numero)
     {
         using (SqlConnection connection = GetConnection())
         {
@@ -222,7 +336,7 @@ public class DatabaseConnection
         }
 
     }
-    public void CriarContaPoupanca(string numero)
+    public static void CriarContaPoupanca(string numero)
     {
         using (SqlConnection connection = GetConnection())
         {
